@@ -13,3 +13,7 @@ https://blog.naver.com/eziya76/221963225897
 3. Issue
 I found a memory leak issue when "mbedtls_ssl_handshake" is called and haven't solved it yet.
 To walk around this issue, I used "mbedtls_memory_buffer_alloc_init" and recreate SSL task whenever memory error happens.
+
+4. Testing video
+https://youtu.be/gn9HXI1YNUg
+
