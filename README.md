@@ -2,13 +2,13 @@
 STM32F4 HAL mbedTLS library testing (SSL/TLS client)
 
 1. Reference 
-https://engschool.tistory.com/entry/SSLTLS-embedded-for-IoT-8
-https://cxemotexnika.org/2018/10/primer-zashhishhennogo-https-soedineniya-s-ispolzovaniem-mbed-tls/
-https://github.com/PetroShevchenko/cxemotexnika/tree/master/Examples/NUCLEO_F429ZI/nucleo_f429zi_https_client
+https://engschool.tistory.com/entry/SSLTLS-embedded-for-IoT-8 <br>
+https://cxemotexnika.org/2018/10/primer-zashhishhennogo-https-soedineniya-s-ispolzovaniem-mbed-tls/ <br>
+https://github.com/PetroShevchenko/cxemotexnika/tree/master/Examples/NUCLEO_F429ZI/nucleo_f429zi_https_client <br>
 
 2. Tutorial [Written in Korean]
-https://blog.naver.com/eziya76/221959527368
-https://blog.naver.com/eziya76/221963225897
+https://blog.naver.com/eziya76/221959527368 <br>
+https://blog.naver.com/eziya76/221963225897 <br>
 
 3. Issue
 I found a memory leak issue when "mbedtls_ssl_handshake" is called and haven't solved it yet.
