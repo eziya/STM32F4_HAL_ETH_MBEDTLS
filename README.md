@@ -1,7 +1,7 @@
 # STM32F4_HAL_ETH_MBEDTLS
 STM32F4 HAL mbedTLS library testing (SSL/TLS client)
 
-1. Reference 
+1. Reference<br>
 https://engschool.tistory.com/entry/SSLTLS-embedded-for-IoT-8 <br>
 https://cxemotexnika.org/2018/10/primer-zashhishhennogo-https-soedineniya-s-ispolzovaniem-mbed-tls/ <br>
 https://github.com/PetroShevchenko/cxemotexnika/tree/master/Examples/NUCLEO_F429ZI/nucleo_f429zi_https_client <br>
