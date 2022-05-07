@@ -10,8 +10,8 @@ https://github.com/PetroShevchenko/cxemotexnika/tree/master/Examples/NUCLEO_F429
 https://blog.naver.com/eziya76/221959527368 <br>
 https://blog.naver.com/eziya76/221963225897 <br>
 
-3. Issue
-solved
+3. Issue<br?
+solved<br>
 https://github.com/eziya/STM32F4_HAL_LWIP_LAB/issues/1
 
 I found a memory leak issue when "mbedtls_ssl_handshake" is called and haven't solved it yet.
