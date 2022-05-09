@@ -12,10 +12,9 @@ https://blog.naver.com/eziya76/221963225897 <br>
 
 3. Issue<br>
 solved<br>
-https://github.com/eziya/STM32F4_HAL_LWIP_LAB/issues/1
-
-I found a memory leak issue when "mbedtls_ssl_handshake" is called and haven't solved it yet.
-To walk around this issue, I used "mbedtls_memory_buffer_alloc_init" and recreate SSL task whenever memory error happens.
+https://github.com/eziya/STM32F4_HAL_LWIP_LAB/issues/1 <br>
+~~I found a memory leak issue when "mbedtls_ssl_handshake" is called and haven't solved it yet.<br>~~
+~~To walk around this issue, I used "mbedtls_memory_buffer_alloc_init" and recreate SSL task whenever memory error happens.<br>~~
 
 4. Testing video
 https://youtu.be/gn9HXI1YNUg
