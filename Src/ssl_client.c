@@ -87,21 +87,21 @@ mbedtls_ssl_context ssl;
 mbedtls_ssl_config conf;
 mbedtls_x509_crt cacert;
 
-//void *mbedtls_calloc( size_t n, size_t size )
-//{
-//	const size_t poolSize = n * size;
-//	void *p = pvPortMalloc(poolSize);
-//	if (p != NULL)
-//	{
-//		memset(p, 0, poolSize);
-//	}
-//	return p;
-//}
-//
-//void mbedtls_free( void *ptr )
-//{
-//	vPortFree(ptr);
-//}
+void *mbedtls_calloc( size_t n, size_t size )
+{
+	const size_t poolSize = n * size;
+	void *p = pvPortMalloc(poolSize);
+	if (p != NULL)
+	{
+		memset(p, 0, poolSize);
+	}
+	return p;
+}
+
+void mbedtls_free( void *ptr )
+{
+	vPortFree(ptr);
+}
 
 static void my_debug(void *ctx, int level, const char *file, int line, const char *str)
 {
@@ -175,62 +175,62 @@ void StartSSLClientTask(void const *argument)
     }
   }
 
+  /*
+   * 1. Setup stuff
+   */
+  mbedtls_printf("  . Setting up the SSL/TLS structure...");
+  fflush( stdout);
+
+  if((ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0)
+  {
+    mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
+    goto exit;
+  }
+
+  mbedtls_printf(" ok\n");
+
+  /* OPTIONAL is not optimal for security,
+   * but makes interop easier in this simplified example */
+  mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
+  mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
+  mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
+  mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
+
+  if((ret = mbedtls_ssl_setup(&ssl, &conf)) != 0)
+  {
+    mbedtls_printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
+    goto exit;
+  }
+
+  if((ret = mbedtls_ssl_set_hostname(&ssl, SERVER_NAME)) != 0)
+  {
+    mbedtls_printf(" failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret);
+    goto exit;
+  }
+
+  mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
+
   while(1)
   {
     /*
-     * 1. Start the connection
+     * 2. Start the connection
      */
     mbedtls_printf("  . Connecting to tcp/%s/%s...", SERVER_NAME, SERVER_PORT);
     fflush( stdout);
 
     while(1)
     {
-      if((ret = mbedtls_net_connect(&server_fd, SERVER_NAME, SERVER_PORT, MBEDTLS_NET_PROTO_TCP)) == 0)
-      {
-        break;
-      } else
-      {
-        mbedtls_printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
-        osDelay(100);
-      }
+  	if((ret = mbedtls_net_connect(&server_fd, SERVER_NAME, SERVER_PORT, MBEDTLS_NET_PROTO_TCP)) == 0)
+  	{
+  	  break;
+  	} else
+  	{
+  	  mbedtls_printf(" failed\n  ! mbedtls_net_connect returned %d\n\n", ret);
+  	  osDelay(100);
+  	}
     }
 
     mbedtls_printf(" ok\n");
-
-    /*
-     * 2. Setup stuff
-     */
-    mbedtls_printf("  . Setting up the SSL/TLS structure...");
-    fflush( stdout);
-
-    if((ret = mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0)
-    {
-      mbedtls_printf(" failed\n  ! mbedtls_ssl_config_defaults returned %d\n\n", ret);
-      goto exit;
-    }
-
-    mbedtls_printf(" ok\n");
-
-    /* OPTIONAL is not optimal for security,
-     * but makes interop easier in this simplified example */
-    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_OPTIONAL);
-    mbedtls_ssl_conf_ca_chain(&conf, &cacert, NULL);
-    mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);
-    mbedtls_ssl_conf_dbg(&conf, my_debug, stdout);
-
-    if((ret = mbedtls_ssl_setup(&ssl, &conf)) != 0)
-    {
-      mbedtls_printf(" failed\n  ! mbedtls_ssl_setup returned %d\n\n", ret);
-      goto exit;
-    }
-
-    if((ret = mbedtls_ssl_set_hostname(&ssl, SERVER_NAME)) != 0)
-    {
-      mbedtls_printf(" failed\n  ! mbedtls_ssl_set_hostname returned %d\n\n", ret);
-      goto exit;
-    }
-
-    mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
 
     /*
      * 4. Handshake
